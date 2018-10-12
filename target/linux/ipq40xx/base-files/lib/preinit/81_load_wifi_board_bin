@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Copyright (c) 2015 The Linux Foundation. All rights reserved.
+# Copyright (C) 2011 OpenWrt.org
+#!/bin/sh
+#
+# Copyright (c) 2015 The Linux Foundation. All rights reserved.
+# Copyright (C) 2011 OpenWrt.org
+
+do_load_ipq4019_board_bin()
+{
+    local board=$(board_name)
+    local mtdblock=$(find_mtd_part 0:ART)
+
+    local apdk="/tmp"
+
+    if [ -z "$mtdblock" ]; then
+        # read from mmc
+        mtdblock=$(find_mmc_part 0:ART)
+    fi
+
+    [ -n "$mtdblock" ] || return
+
+    # load board.bin
+    case "$board" in
+            comfast,cf-e370ac)
+		    if [ -e "/lib/firmware/ath10k/QCA4019/hw1.0/board-2G-body.bin" ]; then
+			return
+		    fi
+
+                    mkdir -p ${apdk}
+                    dd if=${mtdblock} of=${apdk}/wifi0.caldata bs=32 count=377 skip=128
+                    dd if=${mtdblock} bs=1 skip=4098 count=6 | dd of=${apdk}/wifi0.caldata conv=notrunc bs=1 seek=6 # Fix wrong mtd-mac-address offset
+                    cp ${apdk}/wifi0.caldata /lib/firmware/ath10k/pre-cal-ahb-a000000.wifi.bin
+                    dd if=${mtdblock} of=${apdk}/wifi1.caldata bs=32 count=377 skip=640
+                    cp ${apdk}/wifi1.caldata /lib/firmware/ath10k/pre-cal-ahb-a800000.wifi.bin
+                    cp ${apdk}/wifi0.caldata /lib/firmware/ath10k/QCA4019/hw1.0/board-2G-body.bin
+                    cp ${apdk}/wifi1.caldata /lib/firmware/ath10k/QCA4019/hw1.0/board-5G-body.bin
+                    dd if=/lib/firmware/ath10k/QCA4019/hw1.0/board-2G-head.bin bs=1 skip=0 count=84 > /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin && \
+                    dd if=/lib/firmware/ath10k/QCA4019/hw1.0/board-2G-body.bin bs=256 skip=0 count=47 >> /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin && \
+                    dd if=/dev/zero bs=28 skip=0 count=1 >> /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin && \
+                    dd if=/lib/firmware/ath10k/QCA4019/hw1.0/board-5G-head.bin bs=1 skip=0 count=68 >> /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin && \
+                    dd if=/lib/firmware/ath10k/QCA4019/hw1.0/board-5G-body.bin bs=256 skip=0 count=47 >> /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin && \
+                    dd if=/dev/zero bs=32 skip=0 count=1 >> /lib/firmware/ath10k/QCA4019/hw1.0/board-2.bin
+                    rm ${apdk}/wifi0.caldata ${apdk}/wifi1.caldata
+            ;;
+    esac
+}
+
+boot_hook_add preinit_main do_load_ipq4019_board_bin

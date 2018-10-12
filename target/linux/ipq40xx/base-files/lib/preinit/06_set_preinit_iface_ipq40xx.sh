@@ -6,6 +6,7 @@ set_preinit_iface() {
 	case $(board_name) in
 	asus,rt-ac58u| \
 	avm,fritzbox-4040| \
+	comfast,cf-e370ac| \
 	glinet,gl-b1300| \
 	meraki,mr33| \
 	zyxel,nbg6617)

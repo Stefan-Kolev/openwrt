@@ -31,6 +31,11 @@ netgear,ex6150v2)
 	ucidef_set_led_wlan "wlan2g" "WLAN2G" "ex61x0v2:green:router" "phy0tpt"
 	ucidef_set_led_wlan "wlan5g" "WLAN5G" "ex61x0v2:green:client" "phy1tpt"
 	;;
+comfast,cf-e370ac)
+        ucidef_set_led_wlan "wlan" "WLAN" "${boardname}:blue:wlan" "phy0tpt" "phy1tpt"
+        ucidef_set_led_switch "wan" "WAN" "${boardname}:red:wan" "switch0" "0x20"
+        ucidef_set_led_switch "lan" "LAN" "${boardname}:green:lan" "switch0" "0x10"
+        ;;	
 meraki,mr33)
 	ucidef_set_interface_lan "eth0"
 	;;

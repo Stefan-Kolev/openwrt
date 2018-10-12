@@ -59,6 +59,11 @@ platform_do_upgrade() {
 		PART_NAME="inactive"
 		platform_do_upgrade_openmesh "$ARGV"
 		;;
+	comfast,cf-e370ac)
+		KERNEL_NAME="0:HLOS"
+		ROOTFS_NAME="rootfs"
+		platform_do_upgrade_smem "$ARGV"
+		;;		
 	meraki,mr33)
 		CI_KERNPART="part.safe"
 		nand_do_upgrade "$1"
@@ -83,3 +88,18 @@ platform_nand_pre_upgrade() {
 		;;
 	esac
 }
+
+platform_do_upgrade_arm() {
+	dd if="$1" of=/tmp/kernel.bin bs=1k count=4096
+	dd if="$1" of=/tmp/rootfs.bin bs=1k skip=4096
+	case "$(board-name)" in
+	*)
+		MTD_CONFIG_ARGS="-s 0x400000"
+		default_do_upgrade_arm "$ARGV"
+		;;
+	esac
+}
+blink_led() {
+	. /etc/diag.sh; set_state upgrade
+}
+append sysupgrade_pre_upgrade blink_led
