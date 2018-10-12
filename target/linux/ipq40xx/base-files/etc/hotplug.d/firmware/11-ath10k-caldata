@@ -137,6 +137,7 @@ case "$FIRMWARE" in
 		ath10kcal_patch_mac_crc $(mtd_get_mac_binary dnidata 0)
 		;;
 	compex,wpj428 |\
+	comfast,cf-e370ac |\
 	engenius,eap1300 |\
 	openmesh,a42 |\
 	openmesh,a62)
@@ -175,6 +176,7 @@ case "$FIRMWARE" in
 		ath10kcal_patch_mac_crc $(mtd_get_mac_binary dnidata 12)
 		;;
 	compex,wpj428 |\
+	comfast,cf-e370ac |\
 	engenius,eap1300 |\
 	openmesh,a42 |\
 	openmesh,a62)
