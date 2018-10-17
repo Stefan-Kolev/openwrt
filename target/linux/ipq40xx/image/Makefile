@@ -102,7 +102,7 @@ define Device/comfast_cf-e370ac
         DEVICE_TITLE := COMFAST CF-E370AC
 	IMAGES := sysupgrade.bin
 	IMAGE/sysupgrade.bin := append-kernel | pad-to $$$${KERNEL_SIZE} | append-rootfs | pad-rootfs | append-metadata
-	DEVICE_PACKAGES := ath10k-firmware-qca4019-ct
+	DEVICE_PACKAGES := ath10k-firmware-qca4019-ct ipq-wifi-comfast_cf-e370ac
 endef
 TARGET_DEVICES += comfast_cf-e370ac
 

@@ -165,10 +165,12 @@
 
 		wifi@a000000 {
 			status = "okay";
+			qcom,ath10k-calibration-variant = "Comfast-E370AC";
 		};
 
 		wifi@a800000 {
 			status = "okay";
+                        qcom,ath10k-calibration-variant = "Comfast-E370AC";
 		};
 	};
 
